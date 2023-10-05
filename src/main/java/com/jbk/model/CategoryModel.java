@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern;
 
 import org.springframework.stereotype.Component;
 @Component
-public class Category {
+public class CategoryModel {
 
 	private long categoryId;
 
@@ -16,7 +16,7 @@ public class Category {
 	private String categoryName;
 
 	@NotBlank(message = "discription cannot be empty.")
-	@Pattern(regexp = "^[a-zA-Z]+$", message = "discription should contains only alphabetic characters.")
+	@Pattern(regexp = "^[a-zA-Z ]+$", message = "discription should contains only alphabetic characters.")
 	private String discription;
 
 	@Min(value = 0, message = "discount should not be less than 0%.")
@@ -31,11 +31,11 @@ public class Category {
 	@Max(value = 10, message = "deliveryCharges should not be more than 10% of product price.")
 	private double deliveryCharges;
 
-	public Category() {
+	public CategoryModel() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Category(long categoryId, String categoryName, String discription, int discount, int gst,
+	public CategoryModel(long categoryId, String categoryName, String discription, int discount, int gst,
 			double deliveryCharges) {
 		super();
 		this.categoryId = categoryId;

@@ -15,7 +15,7 @@ public class Product
 	private Date mfgDate;
 	private Date expDate;
 	private Supplier productSupplier;
-	private Category productCategory;
+	private CategoryModel productCategory;
 	
 	
 	public Product() {
@@ -24,7 +24,7 @@ public class Product
 
 
 	public Product(long productId, String productName, double productPrice, int productQty, String productDescription,
-			Date mfgDate, Date expDate, Supplier productSupplier, Category productCategory) {
+			Date mfgDate, Date expDate, Supplier productSupplier, CategoryModel productCategory) {
 		super();
 		this.productId = productId;
 		this.productName = productName;
@@ -118,12 +118,12 @@ public class Product
 	}
 
 
-	public Category getProductCategory() {
+	public CategoryModel getProductCategory() {
 		return productCategory;
 	}
 
 
-	public void setProductCategory(Category productCategory) {
+	public void setProductCategory(CategoryModel productCategory) {
 		this.productCategory = productCategory;
 	}
 
