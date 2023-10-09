@@ -1,6 +1,8 @@
 package com.jbk.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
@@ -68,26 +70,30 @@ public class CategoryDaoImpl implements CategoryDao {
 			if (categoryEntity != null) {
 				categoryModel = entityToModel.convertToModel(categoryEntity);
 			}
-		} catch (Exception e) {
+		} 
+		
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 		return categoryModel;
 	}
 
 	@Override
-	public List<Category> getAllCategory() {
-		List<CategoryEntity> list;
+	public List<CategoryEntity> getAllCategory() {
+		List<CategoryEntity> list = null;
 		try (Session session = sessionFactory.openSession()) {
 			Criteria criteria = session.createCriteria(CategoryEntity.class);
 			list = criteria.list();
+			
+//			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return list;
 	}
 
 	@Override
-	public List<Category> deleteCategory(long categoryId) {
+	public List<CategoryEntity> deleteCategory(long categoryId) {
 		try (Session session = sessionFactory.openSession()) {
 			CategoryEntity categoryEntity = session.get(CategoryEntity.class, categoryId);
 			if (categoryEntity != null) {
@@ -98,20 +104,19 @@ public class CategoryDaoImpl implements CategoryDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return getAllCategory();
 	}
 
 	@Override
-	public Category updateCategory(Category category) {
+	public CategoryEntity updateCategory(CategoryEntity categoryEntity) {
 		try (Session session = sessionFactory.openSession()) {
-			Category dbCategory = getCategoryById(category.getCategoryId());
+			Category dbCategory = getCategoryById(categoryEntity.getCategoryId());
 
 			if (dbCategory != null) {
-
-				CategoryEntity categoryEntity = modelToEntity.convertToEntity(category);
 				session.update(categoryEntity);
 				session.beginTransaction().commit();
-				return category;
+				return categoryEntity;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

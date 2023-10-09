@@ -35,14 +35,11 @@ public class GlobalExceptionHandler {
 		Map<String, Object> map=new HashMap<>();
 
 		try {
-			System.out.println(1111111111);
-			
 			String message = ex.getMessage();
 			String[] split = message.split(":");
-			System.out.println(22222222);
 			map.put("Timestamp", new Date());
 			map.put("Default Message", split[0]);
-			map.put("Status", 204);
+			map.put("Status", 200);
 			map.put("Path", split[1]);
 			
 		} catch (Exception e) {
