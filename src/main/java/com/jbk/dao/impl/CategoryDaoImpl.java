@@ -1,19 +1,18 @@
 package com.jbk.dao.impl;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.jbk.dao.CategoryDao;
-import com.jbk.entity.Category;
-import com.jbk.model.CategoryModel;
+import com.jbk.entity.CategoryEntity;
+import com.jbk.model.Category;
+import com.jbk.utility.EntityToModel;
 import com.jbk.utility.ModelToEntity;
 
 @Repository
@@ -28,30 +27,31 @@ public class CategoryDaoImpl implements CategoryDao {
 	@Autowired
 	private ModelToEntity modelToEntity;
 
+	@Autowired
+	private EntityToModel entityToModel;
+
 	@Override
-	public int addCategory(CategoryModel categoryModel) {
+	public int addCategory(Category categoryModel) {
 		int status = 0;
 		try (Session session = sessionFactory.openSession()) {
 
-			Category categoryEntity = modelToEntity.modelToEntity(categoryModel);
+			CategoryEntity categoryEntity = modelToEntity.convertToEntity(categoryModel);
 
-			//Category category = session.get(Category.class, categoryEntity.getCategoryId());
-			
-			//if(category==null) {
-				session.save(categoryEntity);
-				session.beginTransaction().commit();
-				status = 1;	
+			// Category category = session.get(Category.class,
+			// categoryEntity.getCategoryId());
+
+			// if(category==null) {
+			session.save(categoryEntity);
+			session.beginTransaction().commit();
+			status = 1;
 //			}else {
 //				status=2;
 //			}
-			
-			
+
+		} catch (PersistenceException e) {
+			status = 2;
 		}
-		catch (PersistenceException e) {
-			status=2;
-			System.out.println("1111111");
-		}
-		
+
 		catch (Exception e) {
 			e.printStackTrace();
 			status = 3;
@@ -60,26 +60,62 @@ public class CategoryDaoImpl implements CategoryDao {
 	}
 
 	@Override
-	public CategoryModel getCategoryById(long categoryId) {
-		// TODO Auto-generated method stub
+	public Category getCategoryById(long categoryId) {
+		Category categoryModel = null;
+
+		try (Session session = sessionFactory.openSession()) {
+			CategoryEntity categoryEntity = session.get(CategoryEntity.class, categoryId);
+			if (categoryEntity != null) {
+				categoryModel = entityToModel.convertToModel(categoryEntity);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return categoryModel;
+	}
+
+	@Override
+	public List<Category> getAllCategory() {
+		List<CategoryEntity> list;
+		try (Session session = sessionFactory.openSession()) {
+			Criteria criteria = session.createCriteria(CategoryEntity.class);
+			list = criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
-	public List<CategoryModel> getAllCategory() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Category> deleteCategory(long categoryId) {
+		try (Session session = sessionFactory.openSession()) {
+			CategoryEntity categoryEntity = session.get(CategoryEntity.class, categoryId);
+			if (categoryEntity != null) {
+				session.delete(categoryEntity);
+				session.beginTransaction().commit();
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return getAllCategory();
 	}
 
 	@Override
-	public List<CategoryModel> deleteCategory(long categoryId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Category updateCategory(Category category) {
+		try (Session session = sessionFactory.openSession()) {
+			Category dbCategory = getCategoryById(category.getCategoryId());
 
-	@Override
-	public CategoryModel updateCategory(CategoryModel category) {
-		// TODO Auto-generated method stub
+			if (dbCategory != null) {
+
+				CategoryEntity categoryEntity = modelToEntity.convertToEntity(category);
+				session.update(categoryEntity);
+				session.beginTransaction().commit();
+				return category;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 

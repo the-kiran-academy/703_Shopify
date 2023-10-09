@@ -2,13 +2,13 @@ package com.jbk.dao;
 
 import java.util.List;
 
-import com.jbk.model.CategoryModel;
+import com.jbk.model.Category;
 
 public interface CategoryDao {
 
-	public int addCategory(CategoryModel category);
-	public CategoryModel getCategoryById(long categoryId);
-	public List<CategoryModel> getAllCategory();
-	public List<CategoryModel> deleteCategory(long categoryId);
-	public CategoryModel updateCategory(CategoryModel category);
+	public int addCategory(Category category);
+	public Category getCategoryById(long categoryId);
+	public List<Category> getAllCategory();
+	public List<Category> deleteCategory(long categoryId);
+	public Category updateCategory(Category category);
 }

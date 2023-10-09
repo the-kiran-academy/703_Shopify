@@ -1,18 +1,38 @@
-package com.jbk.model;
+package com.jbk.entity;
 
-public class Supplier {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "supplier")
+public class SupplierEntity {
+	
+	@Id
+	@Column(unique = true,nullable = false)
 	private Long supplierId;
+	
+	@Column(unique = true,nullable = false)
 	private String supplierName;
+	
+	@Column(nullable = false)
 	private String city;
+	
+	@Column(nullable = false)
 	private Integer postalCode;
+	
+	@Column(nullable = false)
 	private String countryName;
+	
+	@Column(unique = true,nullable = false)
 	private String mobileNo;
 
-	public Supplier() {
+	public SupplierEntity() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Supplier(Long supplierId, String supplierName, String city, Integer postalCode, String countryName,
+	public SupplierEntity(Long supplierId, String supplierName, String city, Integer postalCode, String countryName,
 			String mobileNo) {
 		super();
 		this.supplierId = supplierId;

@@ -5,54 +5,49 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
-//@Table(name = "category_tbl")
-public class Category {
-
+@Table(name = "category")
+public class CategoryEntity {
+	
 	@Id
 	@Column(unique = true,nullable = false)
-	private long categoryId;
-
+	private Long categoryId;
+	
 	@Column(unique = true,nullable = false)
 	private String categoryName;
-
 	
-	@Column(unique = true,nullable = true)
+	@Column(unique = true,nullable = false)
 	private String discription;
-
 	
-	@Column(nullable = true)
-	private int discount;
-
+	@Column(nullable = false)
+	private Integer discount;
 	
-	@Column(nullable = true)
-	private int gst;
-
+	@Column(nullable = false)
+	private Integer gst;
 	
-	@Column(nullable = true)
-	private double deliveryCharges;
-
-	public Category() {
+	@Column(nullable = false)
+	private Float deliveryCharge;
+	
+	public CategoryEntity() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Category(long categoryId, String categoryName, String discription, int discount, int gst,
-			double deliveryCharges) {
+	public CategoryEntity(Long categoryId, String categoryName, String discription, Integer discount, Integer gst,
+			Float deliveryCharge) {
 		super();
 		this.categoryId = categoryId;
 		this.categoryName = categoryName;
 		this.discription = discription;
 		this.discount = discount;
 		this.gst = gst;
-		this.deliveryCharges = deliveryCharges;
+		this.deliveryCharge = deliveryCharge;
 	}
 
-	public long getCategoryId() {
+	public Long getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(long categoryId) {
+	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
 
@@ -72,34 +67,36 @@ public class Category {
 		this.discription = discription;
 	}
 
-	public int getDiscount() {
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(int discount) {
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 
-	public int getGst() {
+	public Integer getGst() {
 		return gst;
 	}
 
-	public void setGst(int gst) {
+	public void setGst(Integer gst) {
 		this.gst = gst;
 	}
 
-	public double getDeliveryCharges() {
-		return deliveryCharges;
+	public Float getDeliveryCharge() {
+		return deliveryCharge;
 	}
 
-	public void setDeliveryCharges(double deliveryCharges) {
-		this.deliveryCharges = deliveryCharges;
+	public void setDeliveryCharge(Float deliveryCharge) {
+		this.deliveryCharge = deliveryCharge;
 	}
 
 	@Override
 	public String toString() {
 		return "Category [categoryId=" + categoryId + ", categoryName=" + categoryName + ", discription=" + discription
-				+ ", discount=" + discount + ", gst=" + gst + ", deliveryCharges=" + deliveryCharges + "]";
+				+ ", discount=" + discount + ", gst=" + gst + ", deliveryCharge=" + deliveryCharge + "]";
 	}
+	
+	
 
 }

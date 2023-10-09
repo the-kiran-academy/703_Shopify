@@ -1,94 +1,116 @@
 package com.jbk.model;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import org.springframework.stereotype.Component;
 
-public class Product {
-
+@Component
+public class FinalProduct {
 	
 	private Long productId;
-	
-	@NotBlank
-	@Pattern(regexp = "^[a-zA-Z]+[a-zA-Z0-9]*$", message = "Product not valid")
 	private String productName;
-
 	private Supplier supplier;
 	private Category category;
-
-	@Min(1)
 	private Integer productQty;
-
-	@Min(1)
 	private Double productPrice;
-
-	public Product() {
+	
+	private Charges charges;
+	private double discountAmount;
+	private double finalProductPrice;
+	
+	
+	public FinalProduct() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Product(Long productId, String productName, Supplier supplier, Category category, Integer productQty,
-			Double productPrice) {
-		super();
-		this.productId = productId;
-		this.productName = productName;
-		this.supplier = supplier;
-		this.category = category;
-		this.productQty = productQty;
-		this.productPrice = productPrice;
-	}
 
 	public Long getProductId() {
 		return productId;
 	}
 
+
 	public void setProductId(Long productId) {
 		this.productId = productId;
 	}
+
 
 	public String getProductName() {
 		return productName;
 	}
 
+
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
+
 
 	public Supplier getSupplier() {
 		return supplier;
 	}
 
+
 	public void setSupplier(Supplier supplier) {
 		this.supplier = supplier;
 	}
+
 
 	public Category getCategory() {
 		return category;
 	}
 
+
 	public void setCategory(Category category) {
 		this.category = category;
 	}
+
 
 	public Integer getProductQty() {
 		return productQty;
 	}
 
+
 	public void setProductQty(Integer productQty) {
 		this.productQty = productQty;
 	}
+
 
 	public Double getProductPrice() {
 		return productPrice;
 	}
 
+
 	public void setProductPrice(Double productPrice) {
 		this.productPrice = productPrice;
 	}
 
-	@Override
-	public String toString() {
-		return "Product [productId=" + productId + ", productName=" + productName + ", supplier=" + supplier
-				+ ", category=" + category + ", productQty=" + productQty + ", productPrice=" + productPrice + "]";
+
+	public Charges getCharges() {
+		return charges;
 	}
+
+
+	public void setCharges(Charges charges) {
+		this.charges = charges;
+	}
+
+
+	public double getDiscountAmount() {
+		return discountAmount;
+	}
+
+
+	public void setDiscountAmount(double discountAmount) {
+		this.discountAmount = discountAmount;
+	}
+
+
+	public double getFinalProductPrice() {
+		return finalProductPrice;
+	}
+
+
+	public void setFinalProductPrice(double finalProductPrice) {
+		this.finalProductPrice = finalProductPrice;
+	}
+	
+	
 
 }

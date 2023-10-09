@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import com.jbk.dao.SupplierDao;
-import com.jbk.model.Address;
 import com.jbk.model.Supplier;
 
 @Repository
