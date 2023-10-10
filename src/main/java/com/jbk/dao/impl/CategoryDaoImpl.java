@@ -71,7 +71,6 @@ public class CategoryDaoImpl implements CategoryDao {
 				categoryModel = entityToModel.convertToModel(categoryEntity);
 			}
 		} 
-		
 		catch (Exception e) {
 			e.printStackTrace();
 		}

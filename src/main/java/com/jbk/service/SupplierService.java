@@ -12,7 +12,7 @@ public interface SupplierService {
 
 	public List<Supplier> getAllSupplier();
 
-	public Object deleteSupplier(long supplierId);
+	public List<Supplier> deleteSupplier(long supplierId);
 
 	public Supplier updateSupplier(Supplier supplier);
 

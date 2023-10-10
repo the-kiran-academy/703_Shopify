@@ -1,7 +1,13 @@
 package com.jbk.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 public class Supplier {
 	private Long supplierId;
+	
+	@NotBlank
+	@Pattern(regexp = "^[a-zA-Z ]+[a-zA-Z0-9]*$", message = "Supplier not valid")
 	private String supplierName;
 	private String city;
 	private Integer postalCode;

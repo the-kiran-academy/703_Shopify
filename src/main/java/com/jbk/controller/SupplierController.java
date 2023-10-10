@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,17 +62,33 @@ public class SupplierController {
 		if (!list.isEmpty()) {
 			return list;
 		} else {
-			throw new ResourceNotExistsExceptions("Supplier Not Exists");
+			throw new ResourceNotExistsExceptions("Supplier Not Exists : /get-all-supplier");
 		}
 	}
 	
 	
 	@DeleteMapping("/delete-supplier")
 	public List<Supplier> deleteSupplier(@RequestParam long supplierId){
-		Object obj = service.deleteSupplier(supplierId);
-		return null;
+		 List<Supplier> list = service.deleteSupplier(supplierId);
+		 if (!list.isEmpty()) {
+				return list;
+			} else {
+				throw new ResourceNotExistsExceptions("Supplier Not Exists To delete With  Id = " + supplierId +" : /delete-supplier/"+supplierId);
+			}
 		
 	}
+	
+	@PutMapping("/update-supplier")
+	public Supplier updateSupplier(@RequestBody Supplier supplier)
+	{
+		Supplier updatedSupplier = service.updateSupplier(supplier);
+		if(updatedSupplier!=null) {
+			return updatedSupplier;
+		}else {
+			throw new ResourceNotExistsExceptions("Supplier Not Exists To Update : /update-supplier");
+		}
+	}
+	
 	
 	 
 
