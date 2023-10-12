@@ -1,33 +1,20 @@
 package com.jbk.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.PersistenceException;
-
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.jbk.dao.SupplierDao;
-import com.jbk.entity.CategoryEntity;
 import com.jbk.entity.SupplierEntity;
-import com.jbk.model.Category;
-import com.jbk.model.Supplier;
-import com.jbk.utility.EntityToModel;
-import com.jbk.utility.ModelToEntity;
 
 @Repository
 public class SupplierDaoImpl implements SupplierDao {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-
-	@Autowired
-	private ModelToEntity modelToEntity;
-
-	
 
 	@Override
 	public int addSupplier(SupplierEntity supplieEntity) {

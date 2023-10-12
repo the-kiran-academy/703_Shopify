@@ -27,6 +27,8 @@ public class SupplierEntity {
 	
 	@Column(unique = true,nullable = false)
 	private String mobileNo;
+	
+	
 
 	public SupplierEntity() {
 		// TODO Auto-generated constructor stub

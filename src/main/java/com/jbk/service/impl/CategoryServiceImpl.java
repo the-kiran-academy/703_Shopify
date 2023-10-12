@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import com.jbk.dao.CategoryDao;
 import com.jbk.entity.CategoryEntity;
@@ -13,7 +15,8 @@ import com.jbk.service.CategoryService;
 import com.jbk.utility.EntityToModel;
 import com.jbk.utility.ModelToEntity;
 
-@Service
+@Service("categoryServiceImpl")
+
 public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
@@ -21,19 +24,30 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	private EntityToModel entityToModel;
-	
+
 	@Autowired
 	private ModelToEntity modelToEntity;
+
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Override
 	public int addCategory(Category category) {
 
-		return dao.addCategory(category);
+		CategoryEntity categoryEntity = modelMapper.map(category, CategoryEntity.class);
+
+		return dao.addCategory(categoryEntity);
 	}
 
 	@Override
 	public Category getCategoryById(long categoryId) {
-		return dao.getCategoryById(categoryId);
+		CategoryEntity categoryEntity = dao.getCategoryById(categoryId);
+		
+		
+		if (categoryEntity != null) {
+			return  modelMapper.map(categoryEntity, Category.class);
+		}
+		return null;
 	}
 
 	@Override
@@ -65,11 +79,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Category updateCategory(Category category) {
-		
-		CategoryEntity categoryEntity = modelToEntity.convertToEntity(category);
-		
-		CategoryEntity updatedCategoryEntity = dao.updateCategory(categoryEntity);
-		
+
+		CategoryEntity updatedCategoryEntity = dao.updateCategory(modelToEntity.convertToEntity(category));
+
 		return entityToModel.convertToModel(updatedCategoryEntity);
 	}
 

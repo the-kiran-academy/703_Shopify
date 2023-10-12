@@ -1,45 +1,98 @@
 package com.jbk.dao.impl;
+
 import java.util.List;
+import javax.persistence.PersistenceException;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.TransientPropertyValueException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.jbk.dao.ProductDao;
-import com.jbk.model.Product;
+import com.jbk.entity.ProductEntity;
 
 @Repository
-
 public class ProductDaoImpl implements ProductDao {
 
-
-	
+	@Autowired
+	private SessionFactory sessionFactory;
 
 	@Override
-	public int addProduct(Product product) {
+	public int addProduct(ProductEntity productEntity) {
+		int status = 0;
+		try (Session session = sessionFactory.openSession()) {
+			session.save(productEntity);
+			session.beginTransaction().commit();
+			status = 1;
+
+			
+		} 
 		
-		return 0;
-	}
-
-	@Override
-	public Product getProductById(long productId) 
-	{
 		
-		
-		return null;
+		catch (PersistenceException e) {
+			e.printStackTrace();
+			status = 2;
+		}
 
+		catch (Exception e) {
+			e.printStackTrace();
+			status = 3;
+		}
+		return status;
 	}
 
 	@Override
-	public List<Product> getAllProduct() {
+	public ProductEntity getProductById(long productId) {
+		ProductEntity productEntity = null;
+		try (Session session = sessionFactory.openSession()) {
+			productEntity = session.get(ProductEntity.class, productId);
+		}
 
-		return null;
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return productEntity;
 	}
 
 	@Override
-	public List<Product> deleteProduct() {
-	
-		return null;
+	public List<ProductEntity> getAllProduct() {
+		List<ProductEntity> list = null;
+		try (Session session = sessionFactory.openSession()) {
+			Criteria criteria = session.createCriteria(ProductEntity.class);
+			list = criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
-	public Product updateProduct() {
+	public List<ProductEntity> deleteProduct(long productId) {
+		try (Session session = sessionFactory.openSession()) {
+			ProductEntity productEntity = session.get(ProductEntity.class, productId);
+			if (productEntity != null) {
+				session.delete(productEntity);
+				session.beginTransaction().commit();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return getAllProduct();
+	}
+
+	@Override
+	public ProductEntity updateProduct(ProductEntity productEntity) {
+		try (Session session = sessionFactory.openSession()) {
+			ProductEntity dbProduct = getProductById(productEntity.getProductId());
+
+			if (dbProduct != null) {
+				session.update(dbProduct);
+				session.beginTransaction().commit();
+				return productEntity;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 

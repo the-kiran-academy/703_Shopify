@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jbk.dao.SupplierDao;
@@ -25,18 +26,23 @@ public class SupplierServiceImpl implements SupplierService {
 	@Autowired
 	private EntityToModel entityToModel;
 
+	@Autowired
+	private ModelMapper modelMapper;
+
 	@Override
 	public int addSupplier(Supplier supplier) {
 
-		return dao.addSupplier(modelToEntity.convertToEntity(supplier));
+		SupplierEntity supplierEntity = modelMapper.map(supplier, SupplierEntity.class);
 
+		// return dao.addSupplier(modelToEntity.convertToEntity(supplier));
+		return dao.addSupplier(supplierEntity);
 	}
 
 	@Override
 	public Supplier getSupplierById(long supplierId) {
-		
+
 		SupplierEntity supplierEntity = dao.getSupplierById(supplierId);
-		if(supplierEntity!=null) {
+		if (supplierEntity != null) {
 			return entityToModel.convertToModel(supplierEntity);
 		}
 
@@ -48,8 +54,8 @@ public class SupplierServiceImpl implements SupplierService {
 
 		List<SupplierEntity> list = dao.getAllSupplier();
 		List<Supplier> modelList = new ArrayList<>();
-		
-		if(!list.isEmpty()) {
+
+		if (!list.isEmpty()) {
 			modelList = list.stream().map(entityToModel::convertToModel).collect(Collectors.toList());
 		}
 
@@ -61,7 +67,7 @@ public class SupplierServiceImpl implements SupplierService {
 		List<Supplier> modelList = new ArrayList<>();
 		List<SupplierEntity> list = dao.deleteSupplier(supplierId);
 
-		if(!list.isEmpty()) {
+		if (!list.isEmpty()) {
 			modelList = list.stream().map(entityToModel::convertToModel).collect(Collectors.toList());
 		}
 
@@ -70,14 +76,14 @@ public class SupplierServiceImpl implements SupplierService {
 
 	@Override
 	public Supplier updateSupplier(Supplier supplier) {
-		
+
 		SupplierEntity updatedSupplier = dao.updateSupplier(modelToEntity.convertToEntity(supplier));
-		
-		if(updatedSupplier!=null) {
+
+		if (updatedSupplier != null) {
 			return entityToModel.convertToModel(updatedSupplier);
 		}
 
-		return null; 
+		return null;
 	}
 
 }

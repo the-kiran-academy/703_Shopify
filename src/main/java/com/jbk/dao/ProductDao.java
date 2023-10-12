@@ -1,14 +1,13 @@
 package com.jbk.dao;
 
 import java.util.List;
-
-import com.jbk.model.Product;
+import com.jbk.entity.ProductEntity;
 
 public interface ProductDao {
 
-	public int addProduct(Product product);
-	public Product getProductById(long productId);
-	public List<Product> getAllProduct();
-	public List<Product> deleteProduct();
-	public Product updateProduct();
+	public int addProduct(ProductEntity product);
+	public ProductEntity getProductById(long productId);
+	public List<ProductEntity> getAllProduct();
+	public List<ProductEntity> deleteProduct(long productId);
+	public ProductEntity updateProduct(ProductEntity productEntity);
 }

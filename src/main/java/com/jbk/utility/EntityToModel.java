@@ -28,6 +28,7 @@ public class EntityToModel {
 
 	public Supplier convertToModel(SupplierEntity entity) {
 		Supplier supplier = new Supplier();
+		
 
 		supplier.setSupplierId(entity.getSupplierId());
 		supplier.setSupplierName(entity.getSupplierName());

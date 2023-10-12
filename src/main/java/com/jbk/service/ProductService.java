@@ -6,7 +6,7 @@ import com.jbk.model.Product;
 
 public interface ProductService {
 	
-	public int saveProduct(Product product);
+	public int addProduct(Product product);
 	public List<Product> deleteProduct(long productId);
 	public Product getProductById(long productId);
 	public List<Product> getAllProduct();
