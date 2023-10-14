@@ -5,6 +5,7 @@ import javax.persistence.PersistenceException;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.jbk.dao.ProductDao;
@@ -93,6 +94,27 @@ public class ProductDaoImpl implements ProductDao {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public List<ProductEntity> getAllProductsByOrder(String orderType, String propertyName) {
+		List<ProductEntity> list = null;
+		try (Session session = sessionFactory.openSession()) {
+			Criteria criteria = session.createCriteria(ProductEntity.class);
+			
+			if("desc".equals(orderType)) {
+				criteria.addOrder(Order.desc(propertyName));  
+			}else {
+				criteria.addOrder(Order.asc(propertyName));
+			}
+			criteria.setFirstResult(0);
+			criteria.setMaxResults(1);
+			
+			list = criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 }

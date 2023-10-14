@@ -5,6 +5,9 @@ import javax.persistence.PersistenceException;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.jbk.dao.CategoryDao;
@@ -18,7 +21,6 @@ public class CategoryDaoImpl implements CategoryDao {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-
 
 	@Override
 	public int addCategory(CategoryEntity categoryEntity) {
@@ -44,8 +46,8 @@ public class CategoryDaoImpl implements CategoryDao {
 		CategoryEntity categoryEntity = null;
 
 		try (Session session = sessionFactory.openSession()) {
-			 categoryEntity = session.get(CategoryEntity.class, categoryId);
-			
+			categoryEntity = session.get(CategoryEntity.class, categoryId);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -92,6 +94,28 @@ public class CategoryDaoImpl implements CategoryDao {
 				session.beginTransaction().commit();
 				return categoryEntity;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public CategoryEntity getCategoryByName(String value) {  //select * from category where categoryName=Electronics
+		try (Session session = sessionFactory.openSession()) {
+			
+			Criteria criteria = session.createCriteria(CategoryEntity.class);
+			
+			Criterion eq = Restrictions.like("categoryName", value);
+			
+			criteria.add(eq);
+			
+			List<CategoryEntity> list = criteria.list();
+			
+			if(!list.isEmpty()) {
+				return (CategoryEntity) list.get(0);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

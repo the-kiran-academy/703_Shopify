@@ -10,4 +10,5 @@ public interface ProductDao {
 	public List<ProductEntity> getAllProduct();
 	public List<ProductEntity> deleteProduct(long productId);
 	public ProductEntity updateProduct(ProductEntity productEntity);
+	public List<ProductEntity> getAllProductsByOrder(String orderType, String propertyName);
 }

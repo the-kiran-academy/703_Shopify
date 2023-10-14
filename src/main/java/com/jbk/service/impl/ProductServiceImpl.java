@@ -56,4 +56,12 @@ public class ProductServiceImpl implements ProductService {
 		return modelMapper.map(updatedProduct, Product.class);
 	}
 
+	@Override
+	public List<Product> getAllProductsByOrder(String orderType, String propertyName) {
+		List<ProductEntity> list = dao.getAllProductsByOrder(orderType,propertyName);
+		
+		return list.stream().map(productEntity -> modelMapper.map(productEntity, Product.class))
+				.collect(Collectors.toList());
+	}
+
 }

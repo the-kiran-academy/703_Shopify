@@ -11,5 +11,7 @@ public interface ProductService {
 	public Product getProductById(long productId);
 	public List<Product> getAllProduct();
 	public Product updateProduct(Product product);
+	
+	public List<Product>  getAllProductsByOrder(String orderType,String propertyName);
 
 }

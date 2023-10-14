@@ -49,7 +49,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 		// modelList = list.stream().map(modelMapper.map(modelList,
 		// null)).collect(Collectors.toList());
-		return list.stream().map(category -> modelMapper.map(category, Category.class)).collect(Collectors.toList());
+
+		return list.stream().map(categoryEntity -> modelMapper.map(categoryEntity, Category.class))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -59,7 +61,10 @@ public class CategoryServiceImpl implements CategoryService {
 		// modelList =
 		// list.stream().map(entityToModel::convertToModel).collect(Collectors.toList());
 
-		return list.stream().map(category -> modelMapper.map(category, Category.class)).collect(Collectors.toList());
+		
+
+		return list.stream().map(categoryEntity -> modelMapper.map(categoryEntity, Category.class))
+				.collect(Collectors.toList());
 
 	}
 
@@ -69,6 +74,19 @@ public class CategoryServiceImpl implements CategoryService {
 		CategoryEntity updatedCategoryEntity = dao.updateCategory(modelMapper.map(category, CategoryEntity.class));
 
 		return modelMapper.map(updatedCategoryEntity, Category.class);
+	}
+
+	@Override
+	public Category getCategoryByName(String categoryName) {
+		
+		CategoryEntity categoryEntity = dao.getCategoryByName(categoryName);
+		if(categoryEntity!=null) {
+		return	modelMapper.map(categoryEntity, Category.class);
+		}else {
+			return null;
+		}
+		
+		 
 	}
 
 }

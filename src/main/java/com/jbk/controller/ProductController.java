@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.jbk.exception.ResourceAlreadyExistsException;
 import com.jbk.exception.ResourceNotExistsExceptions;
@@ -78,4 +79,16 @@ public class ProductController {
 			throw new ResourceNotExistsExceptions("Product Not Exists To Update : /update-product");
 		}
 	}
+	
+	
+	@GetMapping("/get-all-product-by-order")
+	public List<Product> getAllProductByName(@RequestParam String orderType,@RequestParam String propertyName) {
+		List<Product> list = service.getAllProductsByOrder(orderType,propertyName);
+		if (!list.isEmpty()) {
+			return list;
+		} else {
+			throw new ResourceNotExistsExceptions("Product Not Exists  : /get-all-product-by-order");
+		}
+	}
+	
 }

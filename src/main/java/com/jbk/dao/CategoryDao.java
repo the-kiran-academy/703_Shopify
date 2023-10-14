@@ -12,4 +12,5 @@ public interface CategoryDao {
 	public List<CategoryEntity> getAllCategory();
 	public List<CategoryEntity> deleteCategory(long categoryId);
 	public CategoryEntity updateCategory(CategoryEntity category);
+	public CategoryEntity getCategoryByName(String categoryName);
 }

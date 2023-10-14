@@ -15,6 +15,7 @@ public class ModelToEntity {
 	public CategoryEntity convertToEntity(Category category) {
 
 		CategoryEntity entity = new CategoryEntity();
+		
 		entity.setCategoryId(category.getCategoryId());
 		entity.setCategoryName(category.getCategoryName());
 		entity.setDeliveryCharge(category.getDeliveryCharge());

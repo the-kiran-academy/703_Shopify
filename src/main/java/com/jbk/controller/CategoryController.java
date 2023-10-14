@@ -29,11 +29,10 @@ public class CategoryController {
 	@Autowired
 	@Qualifier("categoryServiceImpl")
 	private CategoryService service;
-	
+
 //	@Autowired
 //	@Qualifier("categoryServiceImpl2")
 //	private CategoryService xyz;
-	
 
 	@PostMapping("/add-category")
 	public String addCategory(@RequestBody @Valid Category category) {
@@ -93,6 +92,18 @@ public class CategoryController {
 		} else {
 			throw new ResourceNotExistsExceptions("Category Not Exists To Update : /update-category");
 		}
+	}
+
+	@GetMapping("get-category-by-name/{name}")
+	public Category getCategoryByName(@PathVariable("name") String categoryName) {
+		Category category = service.getCategoryByName(categoryName);
+		if (category != null) {
+			return category;
+		} else {
+			throw new ResourceNotExistsExceptions(
+					"Category Not Exists With Name = " + categoryName + " : /get-category-by-name/" + categoryName);
+		}
+
 	}
 
 }
