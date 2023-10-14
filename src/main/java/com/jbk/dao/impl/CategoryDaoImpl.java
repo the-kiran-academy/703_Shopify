@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.jbk.dao.CategoryDao;
 import com.jbk.entity.CategoryEntity;
-import com.jbk.utility.EntityToModel;
 
 @Repository
 public class CategoryDaoImpl implements CategoryDao {
@@ -20,8 +19,6 @@ public class CategoryDaoImpl implements CategoryDao {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	@Autowired
-	private EntityToModel entityToModel;
 
 	@Override
 	public int addCategory(CategoryEntity categoryEntity) {

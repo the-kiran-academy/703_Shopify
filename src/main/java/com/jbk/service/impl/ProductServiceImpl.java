@@ -1,16 +1,14 @@
 package com.jbk.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jbk.dao.ProductDao;
 import com.jbk.entity.ProductEntity;
 import com.jbk.model.Product;
 import com.jbk.service.ProductService;
-import com.jbk.utility.EntityToModel;
-import com.jbk.utility.ModelToEntity;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -19,23 +17,19 @@ public class ProductServiceImpl implements ProductService {
 	private ProductDao dao;
 
 	@Autowired
-	private EntityToModel entityToModel;
-
-	@Autowired
-	private ModelToEntity modelToEntity;
+	private ModelMapper modelMapper;
 
 	@Override
 	public int addProduct(Product product) {
 
-		return dao.addProduct(modelToEntity.convertToEntity(product));
+		return dao.addProduct(modelMapper.map(product, ProductEntity.class));
 	}
 
 	@Override
 	public List<Product> deleteProduct(long productId) {
 		List<ProductEntity> list = dao.deleteProduct(productId);
-		List<Product> modelList = new ArrayList<>();
-		modelList = list.stream().map(entityToModel::convertToModel).collect(Collectors.toList());
-		return modelList;
+		return list.stream().map(productEntity -> modelMapper.map(productEntity, Product.class))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -43,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
 		ProductEntity productEntity = dao.getProductById(productId);
 		if (productEntity != null) {
-			return entityToModel.convertToModel(productEntity);
+			return modelMapper.map(productEntity, Product.class);
 		} else {
 			return null;
 		}
@@ -52,15 +46,14 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> getAllProduct() {
 		List<ProductEntity> list = dao.getAllProduct();
-		List<Product> modelList = new ArrayList<>();
-		modelList = list.stream().map(entityToModel::convertToModel).collect(Collectors.toList());
-		return modelList;
+		return list.stream().map(productEntity -> modelMapper.map(productEntity, Product.class))
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Product updateProduct(Product product) {
-		ProductEntity updatedProduct = dao.updateProduct(modelToEntity.convertToEntity(product));
-		return entityToModel.convertToModel(updatedProduct);
+		ProductEntity updatedProduct = dao.updateProduct(modelMapper.map(product, ProductEntity.class));
+		return modelMapper.map(updatedProduct, Product.class);
 	}
 
 }

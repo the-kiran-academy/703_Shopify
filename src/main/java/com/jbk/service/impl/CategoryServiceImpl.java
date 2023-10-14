@@ -1,19 +1,14 @@
 package com.jbk.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import com.jbk.dao.CategoryDao;
 import com.jbk.entity.CategoryEntity;
 import com.jbk.model.Category;
 import com.jbk.service.CategoryService;
-import com.jbk.utility.EntityToModel;
-import com.jbk.utility.ModelToEntity;
 
 @Service("categoryServiceImpl")
 
@@ -21,12 +16,6 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	private CategoryDao dao;
-
-	@Autowired
-	private EntityToModel entityToModel;
-
-	@Autowired
-	private ModelToEntity modelToEntity;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -42,10 +31,9 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Category getCategoryById(long categoryId) {
 		CategoryEntity categoryEntity = dao.getCategoryById(categoryId);
-		
-		
+
 		if (categoryEntity != null) {
-			return  modelMapper.map(categoryEntity, Category.class);
+			return modelMapper.map(categoryEntity, Category.class);
 		}
 		return null;
 	}
@@ -54,35 +42,33 @@ public class CategoryServiceImpl implements CategoryService {
 	public List<Category> getAllCategory() {
 
 		List<CategoryEntity> list = dao.getAllCategory();
-		List<Category> modelList = new ArrayList<>();
-
 //	for (CategoryEntity categoryEntity : list) {
 //			Category category = entityToModel.convertToModel(categoryEntity);
 //			modelList.add(category);
 //		}
 
-		modelList = list.stream().map(entityToModel::convertToModel).collect(Collectors.toList());
-
-		return modelList;
+		// modelList = list.stream().map(modelMapper.map(modelList,
+		// null)).collect(Collectors.toList());
+		return list.stream().map(category -> modelMapper.map(category, Category.class)).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<Category> deleteCategory(long categoryId) {
 
 		List<CategoryEntity> list = dao.deleteCategory(categoryId);
-		List<Category> modelList = new ArrayList<>();
+		// modelList =
+		// list.stream().map(entityToModel::convertToModel).collect(Collectors.toList());
 
-		modelList = list.stream().map(entityToModel::convertToModel).collect(Collectors.toList());
+		return list.stream().map(category -> modelMapper.map(category, Category.class)).collect(Collectors.toList());
 
-		return modelList;
 	}
 
 	@Override
 	public Category updateCategory(Category category) {
 
-		CategoryEntity updatedCategoryEntity = dao.updateCategory(modelToEntity.convertToEntity(category));
+		CategoryEntity updatedCategoryEntity = dao.updateCategory(modelMapper.map(category, CategoryEntity.class));
 
-		return entityToModel.convertToModel(updatedCategoryEntity);
+		return modelMapper.map(updatedCategoryEntity, Category.class);
 	}
 
 }
