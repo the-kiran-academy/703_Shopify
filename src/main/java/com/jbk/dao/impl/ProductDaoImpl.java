@@ -28,7 +28,6 @@ public class ProductDaoImpl implements ProductDao {
 			
 		} 
 		
-		
 		catch (PersistenceException e) {
 			e.printStackTrace();
 			status = 2;

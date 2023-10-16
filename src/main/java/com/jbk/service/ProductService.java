@@ -2,6 +2,8 @@ package com.jbk.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.jbk.model.Product;
 
 public interface ProductService {
@@ -13,5 +15,7 @@ public interface ProductService {
 	public Product updateProduct(Product product);
 	
 	public List<Product>  getAllProductsByOrder(String orderType,String propertyName);
+	
+	public String uploadSheet(MultipartFile file);
 
 }

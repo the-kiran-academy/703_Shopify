@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.jbk.exception.ResourceAlreadyExistsException;
 import com.jbk.exception.ResourceNotExistsExceptions;
 import com.jbk.model.Product;
@@ -69,7 +71,7 @@ public class ProductController {
 			throw new ResourceNotExistsExceptions("Product Not Exists  : /get-all-product");
 		}
 	}
-	
+
 	@PutMapping("/update-product")
 	public Product updateProduct(@RequestBody Product product) {
 		Product updatedProduct = service.updateProduct(product);
@@ -79,16 +81,23 @@ public class ProductController {
 			throw new ResourceNotExistsExceptions("Product Not Exists To Update : /update-product");
 		}
 	}
-	
-	
+
 	@GetMapping("/get-all-product-by-order")
-	public List<Product> getAllProductByName(@RequestParam String orderType,@RequestParam String propertyName) {
-		List<Product> list = service.getAllProductsByOrder(orderType,propertyName);
+	public List<Product> getAllProductByName(@RequestParam String orderType, @RequestParam String propertyName) {
+		List<Product> list = service.getAllProductsByOrder(orderType, propertyName);
 		if (!list.isEmpty()) {
 			return list;
 		} else {
 			throw new ResourceNotExistsExceptions("Product Not Exists  : /get-all-product-by-order");
 		}
 	}
-	
+
+	@PostMapping("/upload-sheet")
+	public String uploadSheet(@RequestParam MultipartFile myFile) {
+		
+		service.uploadSheet(myFile);
+		return null;
+		
+	}
+
 }

@@ -1,10 +1,15 @@
 package com.jbk.service.impl;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.jbk.dao.ProductDao;
 import com.jbk.entity.ProductEntity;
 import com.jbk.model.Product;
@@ -62,6 +67,43 @@ public class ProductServiceImpl implements ProductService {
 		
 		return list.stream().map(productEntity -> modelMapper.map(productEntity, Product.class))
 				.collect(Collectors.toList());
+	}
+	
+	
+
+	@Override
+	public String uploadSheet(MultipartFile file) {
+		
+		String fileName = file.getOriginalFilename();
+		
+		// upload file
+		
+		try {
+			FileOutputStream fos=new FileOutputStream("src/main/resources/"+fileName);
+			
+			
+			try {
+				byte[] data = file.getBytes();
+				fos.write(data);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		} catch (FileNotFoundException e) {
+			
+			e.printStackTrace();
+		}
+		
+		// read excel data
+		
+		readExcel("src/main/resources/"+fileName);
+		
+		return null;
+	}
+
+	private void readExcel(String string) {
+		
+		
 	}
 
 }
