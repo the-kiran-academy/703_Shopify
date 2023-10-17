@@ -95,7 +95,7 @@ public class ProductController {
 	@PostMapping("/upload-sheet")
 	public String uploadSheet(@RequestParam MultipartFile myFile) {
 		
-		service.uploadSheet(myFile);
+		String msg = service.uploadSheet(myFile);
 		return null;
 		
 	}
