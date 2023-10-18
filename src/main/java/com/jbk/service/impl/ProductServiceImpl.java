@@ -6,8 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -27,6 +30,7 @@ import com.jbk.model.Category;
 import com.jbk.model.Product;
 import com.jbk.model.Supplier;
 import com.jbk.service.ProductService;
+import com.jbk.validation.ObjectValidation;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -36,6 +40,16 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private ObjectValidation objectValidation;
+	
+	Map<String, String> errorMap=new HashMap<String, String>();
+	
+	LinkedHashMap<String, Object> map=new LinkedHashMap<String, Object>();
+	
+	Map<Integer, Map<String , String>> rowMap=new HashMap<Integer, Map<String,String>>();
+	int totalRecords=0;
 
 	@Override
 	public int addProduct(Product product) {
@@ -84,44 +98,8 @@ if(product.getProductId()==0) {
 		return list.stream().map(productEntity -> modelMapper.map(productEntity, Product.class))
 				.collect(Collectors.toList());
 	}
-
-	@Override
-	public String uploadSheet(MultipartFile file) {
-
-		String fileName = file.getOriginalFilename();
-
-		// upload file
-
-		try {
-			FileOutputStream fos = new FileOutputStream("src/main/resources/" + fileName);
-
-			try {
-				byte[] data = file.getBytes();
-				fos.write(data);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		} catch (FileNotFoundException e) {
-
-			e.printStackTrace();
-		}
-
-		// read excel data
-
-		List<Product> list = readExcel("src/main/resources/" + fileName);
-		
-		for (Product product : list) {
-			
-			
-			addProduct(product);
-		}
-
-		
-
-		return null;
-	}
-
+	
+	
 	private List<Product> readExcel(String filePath) {
 		List<Product> list = new ArrayList<Product>();
 		try {
@@ -129,6 +107,8 @@ if(product.getProductId()==0) {
 
 			Workbook workbook = new XSSFWorkbook(filePath);
 			Sheet sheet = workbook.getSheetAt(0);
+			
+			totalRecords = sheet.getLastRowNum();
 
 			Iterator<Row> rows = sheet.rowIterator();
 
@@ -180,7 +160,16 @@ if(product.getProductId()==0) {
 					}
 
 				}
-				list.add(product);
+				
+				 errorMap = objectValidation.validateProduct(product);
+				 
+				 if(errorMap.isEmpty()) {
+					 list.add(product);
+				 }else {
+					 rowMap.put(row.getRowNum()+1, errorMap);
+				 }
+				
+				
 
 			}
 
@@ -192,4 +181,44 @@ if(product.getProductId()==0) {
 
 	}
 
+
+	@Override
+	public Map<String, Object> uploadSheet(MultipartFile file) {
+
+		String fileName = file.getOriginalFilename();
+
+		// upload file
+
+		try {
+			FileOutputStream fos = new FileOutputStream("src/main/resources/" + fileName);
+
+			try {
+				byte[] data = file.getBytes();
+				fos.write(data);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		} catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+		}
+
+		// read excel data
+
+		List<Product> list = readExcel("src/main/resources/" + fileName);
+		
+		for (Product product : list) {
+			System.out.println(product);
+		}
+		
+		map.put("Bad Record Numbers", rowMap);
+		map.put("Total Records In Sheet", totalRecords);
+		map.put("Total Excluded Records", rowMap.size());
+		
+		
+		return map;
+	}
+
+	
 }

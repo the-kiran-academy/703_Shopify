@@ -1,6 +1,7 @@
 package com.jbk.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +17,6 @@ public interface ProductService {
 	
 	public List<Product>  getAllProductsByOrder(String orderType,String propertyName);
 	
-	public String uploadSheet(MultipartFile file);
+	public Map<String, Object> uploadSheet(MultipartFile file);
 
 }

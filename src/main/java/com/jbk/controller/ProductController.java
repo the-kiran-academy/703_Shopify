@@ -1,6 +1,7 @@
 package com.jbk.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -93,10 +94,10 @@ public class ProductController {
 	}
 
 	@PostMapping("/upload-sheet")
-	public String uploadSheet(@RequestParam MultipartFile myFile) {
+	public Map<String, Object> uploadSheet(@RequestParam MultipartFile myFile) {
 		
-		String msg = service.uploadSheet(myFile);
-		return null;
+		Map<String, Object> map = service.uploadSheet(myFile);
+		return map;
 		
 	}
 
