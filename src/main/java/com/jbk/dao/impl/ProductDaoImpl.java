@@ -6,6 +6,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.jbk.dao.ProductDao;
@@ -25,9 +26,8 @@ public class ProductDaoImpl implements ProductDao {
 			session.beginTransaction().commit();
 			status = 1;
 
-			
-		} 
-		
+		}
+
 		catch (PersistenceException e) {
 			e.printStackTrace();
 			status = 2;
@@ -38,6 +38,26 @@ public class ProductDaoImpl implements ProductDao {
 			status = 3;
 		}
 		return status;
+	}
+
+	@Override
+	public ProductEntity getProductByName(String productName) {
+
+		try (Session session = sessionFactory.openSession()) {
+			Criteria criteria = session.createCriteria(ProductEntity.class);
+			
+			criteria.add(Restrictions.eq("productName", productName));
+			//select * from Product where productName = xyz
+			
+			ProductEntity productEntity = (ProductEntity) criteria.uniqueResult();
+			if (productEntity != null) {
+				return productEntity;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 
 	@Override
@@ -100,15 +120,15 @@ public class ProductDaoImpl implements ProductDao {
 		List<ProductEntity> list = null;
 		try (Session session = sessionFactory.openSession()) {
 			Criteria criteria = session.createCriteria(ProductEntity.class);
-			
-			if("desc".equals(orderType)) {
-				criteria.addOrder(Order.desc(propertyName));  
-			}else {
+
+			if ("desc".equals(orderType)) {
+				criteria.addOrder(Order.desc(propertyName));
+			} else {
 				criteria.addOrder(Order.asc(propertyName));
 			}
 			criteria.setFirstResult(0);
 			criteria.setMaxResults(1);
-			
+
 			list = criteria.list();
 		} catch (Exception e) {
 			e.printStackTrace();

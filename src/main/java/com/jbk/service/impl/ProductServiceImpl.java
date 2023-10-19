@@ -40,24 +40,36 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@Autowired
 	private ObjectValidation objectValidation;
-	
-	Map<String, String> errorMap=new HashMap<String, String>();
-	
-	LinkedHashMap<String, Object> map=new LinkedHashMap<String, Object>();
-	
-	Map<Integer, Map<String , String>> rowMap=new HashMap<Integer, Map<String,String>>();
-	int totalRecords=0;
+
+	Map<String, String> errorMap = new HashMap<String, String>();
+
+	LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+
+	Map<Integer, Map<String, String>> rowMap = new HashMap<Integer, Map<String, String>>();
+	int totalRecords = 0;
+
+	List<Integer> alreadyExistsRows = new ArrayList<Integer>();
 
 	@Override
 	public int addProduct(Product product) {
 
-if(product.getProductId()==0) {
-	
-}
+		if (product.getProductId() == 0) {
+
+		}
 		return dao.addProduct(modelMapper.map(product, ProductEntity.class));
+	}
+
+	@Override
+	public Product getproductByName(String productName) {
+		ProductEntity productEntity = dao.getProductByName(productName);
+		if (productEntity != null) {
+			return modelMapper.map(productEntity, Product.class);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -98,8 +110,7 @@ if(product.getProductId()==0) {
 		return list.stream().map(productEntity -> modelMapper.map(productEntity, Product.class))
 				.collect(Collectors.toList());
 	}
-	
-	
+
 	private List<Product> readExcel(String filePath) {
 		List<Product> list = new ArrayList<Product>();
 		try {
@@ -107,7 +118,7 @@ if(product.getProductId()==0) {
 
 			Workbook workbook = new XSSFWorkbook(filePath);
 			Sheet sheet = workbook.getSheetAt(0);
-			
+
 			totalRecords = sheet.getLastRowNum();
 
 			Iterator<Row> rows = sheet.rowIterator();
@@ -160,16 +171,20 @@ if(product.getProductId()==0) {
 					}
 
 				}
-				
-				 errorMap = objectValidation.validateProduct(product);
-				 
-				 if(errorMap.isEmpty()) {
-					 list.add(product);
-				 }else {
-					 rowMap.put(row.getRowNum()+1, errorMap);
-				 }
-				
-				
+
+				errorMap = objectValidation.validateProduct(product);
+
+				if (errorMap.isEmpty()) {
+
+					Product dbProduct = getproductByName(product.getProductName());
+					if (dbProduct == null) {
+						list.add(product);
+					} else {
+						alreadyExistsRows.add(row.getRowNum() + 1);
+					}
+				} else {
+					rowMap.put(row.getRowNum() + 1, errorMap);
+				}
 
 			}
 
@@ -180,7 +195,6 @@ if(product.getProductId()==0) {
 		return list;
 
 	}
-
 
 	@Override
 	public Map<String, Object> uploadSheet(MultipartFile file) {
@@ -207,18 +221,25 @@ if(product.getProductId()==0) {
 		// read excel data
 
 		List<Product> list = readExcel("src/main/resources/" + fileName);
-		
+		int uploadedRecordCounter = 0;
 		for (Product product : list) {
-			System.out.println(product);
+			int status = addProduct(product);
+			if (status == 1) {
+				++uploadedRecordCounter;
+			}
 		}
-		
-		map.put("Bad Record Numbers", rowMap);
+
 		map.put("Total Records In Sheet", totalRecords);
+		map.put("Uploaded records In DB Count", uploadedRecordCounter);
+		// map.put("Uploaded Rows",0);
+		map.put("Already Exists Records Count", alreadyExistsRows.size());
+		if (alreadyExistsRows.size() > 0) {
+			map.put("Already Exists Records", alreadyExistsRows);
+		}
 		map.put("Total Excluded Records", rowMap.size());
-		
-		
+		map.put("Bad Record Numbers", rowMap);
+
 		return map;
 	}
 
-	
 }
