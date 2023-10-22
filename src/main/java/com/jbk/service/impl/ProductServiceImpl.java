@@ -57,7 +57,9 @@ public class ProductServiceImpl implements ProductService {
 	public int addProduct(Product product) {
 
 		if (product.getProductId() == 0) {
+			String productId = new SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date());
 
+			product.setProductId(Long.parseLong(productId));
 		}
 		return dao.addProduct(modelMapper.map(product, ProductEntity.class));
 	}
